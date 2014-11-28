@@ -21,13 +21,13 @@ import org.json.JSONObject;
 
 public class main extends Activity {
 
-    String urlApi = "http://weather.livedoor.com/forecast/webservice/json/v1?city=130010";
+    String urlApi = "http://weather.livedoor.com/forecast/webservice/json/v1?city=400010";
     private RequestQueue mQueue;
     ArrayAdapter<String> adapter;
 
     private TextView titleText;
     private TextView dateText;
-    private TextView publicTimeText;
+    private TextView telopText;
 
     private static String tagD = "LogD";
 
@@ -38,7 +38,7 @@ public class main extends Activity {
 
         titleText = (TextView)findViewById(R.id.titleTextV);
         dateText = (TextView)findViewById(R.id.dateTextV);
-        publicTimeText = (TextView)findViewById(R.id.publicTimeTextV);
+        telopText = (TextView)findViewById(R.id.telopTextV);
 
 //        ListView listForecast = (ListView) findViewById(R.id.listForecast);
 
@@ -53,45 +53,33 @@ public class main extends Activity {
                     @Override
                     public void onResponse(JSONObject response) {
 
-//                        Log.d(tagD, mQueue);
-
-//                        String weatherjson = response.
-
                         try {
                             String title = response.getString("title");
                             titleText.setText(title);
 
-                            String publicTime = response.getString("publicTime");
-                            publicTimeText.setText(publicTime);
-
+//                            String publicTime = response.getString("publicTime");
+//                            publicTimeText.setText(publicTime);
 //                            String forecastsJson = response.getString(response);
-        //                    Log.d(tagD, forecastsJson);
 
-                            JSONObject jsRoot = new JSONObject();
-                            JSONArray jsDateList = jsRoot.getJSONArray("forecasts");
+                            JSONArray forecastsJson = response.getJSONArray("forecasts");
+//                          Log.d(tagD, forecastsJson);
 
-//                            Log.d(tagD, "jsRoot");
+                            for (int i = 0; i < 1; i++) { //forecastsJson.length(); i++) {
 
-                            for (int i = 0; i < jsDateList.length(); i++) {
-                                JSONObject jsDate = jsDateList.getJSONObject(i);
+                                JSONObject forecasts = forecastsJson.getJSONObject(i);
 
-                                String date = jsDate.getString("date");
-                                dateText.setText(date);
+                                String dateJ = forecasts.getString("date");
+                                dateText.setText(dateJ);
+
+                                String telopJ = forecasts.getString("telop");
+                                telopText.setText(telopJ);
+
                             }
 //                            date = response.getJSONObject("forecasts").getString("date");
 
-
-
                         } catch (JSONException e) {
-//                            Log.e("temakishiki", e.getMessage());
                             e.printStackTrace();
                         }
-
-//                        dateText.setText(date);
-
-//                        Toast.makeText(main.this, date, Toast.LENGTH_SHORT).show();
-
-
                     }
                 },
 
@@ -101,6 +89,7 @@ public class main extends Activity {
                         // エラー表示など
                     }
                 }));
+//        queue.add(jsonRequest);
     }
 
 

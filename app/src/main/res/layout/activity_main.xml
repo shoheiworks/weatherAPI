@@ -24,17 +24,10 @@
         android:layout_marginBottom="12dp" />
 
     <TextView
-        android:text="PublicTime"
-        android:id="@+id/publicTimeTextV"
+        android:text="telop"
+        android:id="@+id/telopTextV"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="12dp" />
-
-    <!--
-    <TextView
-        android:text="@+id/telopTextV"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
--->
 
 </LinearLayout>
