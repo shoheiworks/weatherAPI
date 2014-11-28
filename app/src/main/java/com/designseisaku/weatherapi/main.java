@@ -14,6 +14,7 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -26,6 +27,9 @@ public class main extends Activity {
 
     private TextView titleText;
     private TextView dateText;
+    private TextView publicTimeText;
+
+    private static String tagD = "LogD";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,7 +37,8 @@ public class main extends Activity {
         setContentView(R.layout.activity_main);
 
         titleText = (TextView)findViewById(R.id.titleTextV);
-//        dateText = (TextView)findViewById(R.id.dateTextV);
+        dateText = (TextView)findViewById(R.id.dateTextV);
+        publicTimeText = (TextView)findViewById(R.id.publicTimeTextV);
 
 //        ListView listForecast = (ListView) findViewById(R.id.listForecast);
 
@@ -42,27 +47,39 @@ public class main extends Activity {
 //        listForecast.setAdapter(adapter);
 
         mQueue = Volley.newRequestQueue(this);
+
         mQueue.add(new JsonObjectRequest(Request.Method.GET, urlApi, null,
                 new Response.Listener<JSONObject>() {
                     @Override
                     public void onResponse(JSONObject response) {
-                        // JSONObjectのパース、List、Viewへの追加等
 
-//                        Log.d("temakishiki", "response : " + response.toString());
+//                        Log.d(tagD, mQueue);
 
-                        String title = null;
-//                        String date = null;
+//                        String weatherjson = response.
 
                         try {
-                            title = response.getString("title");
-/*
-                            JSONArray forecasts = JSONObject.getJSONArray("forecasts");
-                            for (int i=0; i<forecasts.length(); i++) {
-                                JSONObject forecast = forecasts.getJSONObject(i);
-                                date = forecast.getStrings("date");
+                            String title = response.getString("title");
+                            titleText.setText(title);
+
+                            String publicTime = response.getString("publicTime");
+                            publicTimeText.setText(publicTime);
+
+//                            String forecastsJson = response.getString(response);
+        //                    Log.d(tagD, forecastsJson);
+
+                            JSONObject jsRoot = new JSONObject();
+                            JSONArray jsDateList = jsRoot.getJSONArray("forecasts");
+
+//                            Log.d(tagD, "jsRoot");
+
+                            for (int i = 0; i < jsDateList.length(); i++) {
+                                JSONObject jsDate = jsDateList.getJSONObject(i);
+
+                                String date = jsDate.getString("date");
+                                dateText.setText(date);
                             }
-*/
 //                            date = response.getJSONObject("forecasts").getString("date");
+
 
 
                         } catch (JSONException e) {
@@ -70,7 +87,6 @@ public class main extends Activity {
                             e.printStackTrace();
                         }
 
-                        titleText.setText(title);
 //                        dateText.setText(date);
 
 //                        Toast.makeText(main.this, date, Toast.LENGTH_SHORT).show();
