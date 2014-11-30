@@ -21,7 +21,7 @@ import org.json.JSONObject;
 
 public class main extends Activity {
 
-    String urlApi = "http://weather.livedoor.com/forecast/webservice/json/v1?city=400010";
+    String urlApi = "http://weather.livedoor.com/forecast/webservice/json/v1?city=";
     private RequestQueue mQueue;
     ArrayAdapter<String> adapter;
 
@@ -36,18 +36,55 @@ public class main extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        titleText = (TextView)findViewById(R.id.titleTextV);
-        dateText = (TextView)findViewById(R.id.dateTextV);
-        telopText = (TextView)findViewById(R.id.telopTextV);
+        titleText = (TextView) findViewById(R.id.titleTextV);
+        dateText = (TextView) findViewById(R.id.dateTextV);
+        telopText = (TextView) findViewById(R.id.telopTextV);
+    }
 
-//        ListView listForecast = (ListView) findViewById(R.id.listForecast);
 
-
+/* Option : 数日分をリストにして表示する
+        ListView listForecast = (ListView) findViewById(R.id.listForecast);
         adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1);
-//        listForecast.setAdapter(adapter);
+        listForecast.setAdapter(adapter);
+*/
+
+    /*
+    //クリックしたらURLを変更する
+    //もし佐賀をクリックしたら佐賀の天気を表示する
+
+    public void setFukuoka (View v) {
+        urlApi = urlApi + "400010";
+        main();
+        urlApi = "http://weather.livedoor.com/forecast/webservice/json/v1?city=";
+    }
+
+    public void setSaga (View v) {
+        urlApi = urlApi + "410010";
+        main();
+        urlApi = "http://weather.livedoor.com/forecast/webservice/json/v1?city=";
+    }
+    public void setNagasaki (View v) {
+        urlApi = urlApi + "420010";
+        main();
+        urlApi = "http://weather.livedoor.com/forecast/webservice/json/v1?city=";
+    }
+    public void setKagoshima (View v) {
+        urlApi = urlApi + "460010";
+        main();
+        urlApi = "http://weather.livedoor.com/forecast/webservice/json/v1?city=";
+    }
+    public void setTokyo (View v) {
+        urlApi = urlApi + "130010";
+        main();
+        urlApi = "http://weather.livedoor.com/forecast/webservice/json/v1?city=";
+    }
+
+*/
+
+
+    public void main() {
 
         mQueue = Volley.newRequestQueue(this);
-
         mQueue.add(new JsonObjectRequest(Request.Method.GET, urlApi, null,
                 new Response.Listener<JSONObject>() {
                     @Override
@@ -84,12 +121,14 @@ public class main extends Activity {
                 },
 
                 new Response.ErrorListener() {
-                    @Override public void onErrorResponse(VolleyError error) {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
                         // エラー処理 error.networkResponseで確認
                         // エラー表示など
                     }
                 }));
 //        queue.add(jsonRequest);
+
     }
 
 

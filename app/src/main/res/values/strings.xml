@@ -2,7 +2,13 @@
 <resources>
 
     <string name="app_name">weatherAPI</string>
-    <string name="hello_world">Hello world!</string>
     <string name="action_settings">Settings</string>
-
+    <string name="btn01">Fukuoka</string>
+    <string name="btn02">Saga</string>
+    <string name="btn03">Nagasaki</string>
+    <string name="btn04">Kumamoto</string>
+    <string name="btn05">Ohita</string>
+    <string name="btn06">Miyazaki</string>
+    <string name="btn07">Kagoshima</string>
+    <string name="btn08">Tokyo</string>
 </resources>
