@@ -31,7 +31,7 @@
         android:layout_marginBottom="52dp" />
 
     <TableLayout
-        android:layout_width="280dp"
+        android:layout_width="320dp"
         android:layout_height="wrap_content">
 
         <TableRow
@@ -45,7 +45,7 @@
                 android:layout_height="wrap_content"
                 android:text="@string/btn01"
                 android:layout_weight="1"
-                android:onClick="setFukuoka"
+                android:onClick="setArea"
                 android:id="@+id/button1" />
 
             <Button
@@ -53,7 +53,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:onClick="setSaga"
+                android:onClick="setArea"
                 android:text="@string/btn02" />
 
             <Button
@@ -61,7 +61,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:onClick="setNagasaki"
+                android:onClick="setArea"
                 android:text="@string/btn03" />
         </TableRow>
 
@@ -75,7 +75,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:onClick="setKumamoto"
+                android:onClick="setArea"
                 android:text="@string/btn04" />
 
             <Button
@@ -83,7 +83,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:onClick="setOhita"
+                android:onClick="setArea"
                 android:text="@string/btn05" />
 
             <Button
@@ -91,7 +91,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:onClick="setMiyazaki"
+                android:onClick="setArea"
                 android:text="@string/btn06" />
         </TableRow>
 
@@ -105,14 +105,14 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:onClick="setKagoshima"
+                android:onClick="setArea"
                 android:text="@string/btn07" />
             <Button
                 android:id="@+id/button8"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:onClick="setTokyo"
+                android:onClick="setArea"
                 android:text="@string/btn08" />
         </TableRow>
     </TableLayout>

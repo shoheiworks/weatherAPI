@@ -40,8 +40,12 @@ public class main extends Activity {
         titleText = (TextView) findViewById(R.id.titleTextV);
         dateText = (TextView) findViewById(R.id.dateTextV);
         telopText = (TextView) findViewById(R.id.telopTextV);
-    }
 
+        //アプリ起動時の表示
+        titleText.setText("地域");
+        dateText.setText("日付");
+        telopText.setText("天気");
+    }
 
 /* Option : 数日分をリストにして表示する
         ListView listForecast = (ListView) findViewById(R.id.listForecast);
@@ -50,33 +54,42 @@ public class main extends Activity {
 */
 
     //クリックしたらURLを変更する
-
-    public void setFukuoka (View v) {
-        urlApi = urlApi + "400010";
-        main();
-        urlApi = "http://weather.livedoor.com/forecast/webservice/json/v1?city=";
+    public void setArea (View v) {
+        switch (v.getId()) {
+            case R.id.button1:
+                urlApi = urlApi + "400010";
+                main();
+                break;
+            case R.id.button2:
+                urlApi = urlApi + "410010";
+                main();
+                break;
+            case R.id.button3:
+                urlApi = urlApi + "420010";
+                main();
+                break;
+            case R.id.button4:
+                urlApi = urlApi + "430010";
+                main();
+                break;
+            case R.id.button5:
+                urlApi = urlApi + "440010";
+                main();
+                break;
+            case R.id.button6:
+                urlApi = urlApi + "450010";
+                main();
+                break;
+            case R.id.button7:
+                urlApi = urlApi + "460010";
+                main();
+                break;
+            case R.id.button8:
+                urlApi = urlApi + "130010";
+                main();
+                break;
+        }
     }
-    public void setSaga (View v) {
-        urlApi = urlApi + "410010";
-        main();
-        urlApi = "http://weather.livedoor.com/forecast/webservice/json/v1?city=";
-    }
-    public void setNagasaki (View v) {
-        urlApi = urlApi + "420010";
-        main();
-        urlApi = "http://weather.livedoor.com/forecast/webservice/json/v1?city=";
-    }
-/*    public void setKagoshima (View v) {
-        urlApi = urlApi + "460010";
-        main();
-        urlApi = "http://weather.livedoor.com/forecast/webservice/json/v1?city=";
-    }
-*/    public void setTokyo (View v) {
-        urlApi = urlApi + "130010";
-        main();
-        urlApi = "http://weather.livedoor.com/forecast/webservice/json/v1?city=";
-    }
-
 
     public void main() {
 
@@ -122,9 +135,10 @@ public class main extends Activity {
                         // エラー処理 error.networkResponseで確認
                         // エラー表示など
                     }
-                }));
+                }
+        ));
+        urlApi = "http://weather.livedoor.com/forecast/webservice/json/v1?city=";
 //        queue.add(jsonRequest);
-
     }
 
 
