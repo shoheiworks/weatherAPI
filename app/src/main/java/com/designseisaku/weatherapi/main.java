@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
@@ -48,16 +49,13 @@ public class main extends Activity {
         listForecast.setAdapter(adapter);
 */
 
-    /*
     //クリックしたらURLを変更する
-    //もし佐賀をクリックしたら佐賀の天気を表示する
 
     public void setFukuoka (View v) {
         urlApi = urlApi + "400010";
         main();
         urlApi = "http://weather.livedoor.com/forecast/webservice/json/v1?city=";
     }
-
     public void setSaga (View v) {
         urlApi = urlApi + "410010";
         main();
@@ -68,18 +66,16 @@ public class main extends Activity {
         main();
         urlApi = "http://weather.livedoor.com/forecast/webservice/json/v1?city=";
     }
-    public void setKagoshima (View v) {
+/*    public void setKagoshima (View v) {
         urlApi = urlApi + "460010";
         main();
         urlApi = "http://weather.livedoor.com/forecast/webservice/json/v1?city=";
     }
-    public void setTokyo (View v) {
+*/    public void setTokyo (View v) {
         urlApi = urlApi + "130010";
         main();
         urlApi = "http://weather.livedoor.com/forecast/webservice/json/v1?city=";
     }
-
-*/
 
 
     public void main() {
