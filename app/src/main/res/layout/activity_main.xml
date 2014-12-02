@@ -30,6 +30,30 @@
         android:layout_height="wrap_content"
         android:layout_marginBottom="52dp" />
 
+    <TextView
+        android:text="url"
+        android:id="@+id/urlTextV"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="52dp" />
+
+<!--
+    <com.android.volley.toolbox.NetworkImageView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+-->
+    <ListView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/listView" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="No Data Here"
+        android:padding="5dp"
+        android:id="@+id/empty" />
+
     <TableLayout
         android:layout_width="320dp"
         android:layout_height="wrap_content">

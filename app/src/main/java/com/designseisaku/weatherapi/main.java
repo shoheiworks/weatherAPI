@@ -1,12 +1,21 @@
 package com.designseisaku.weatherapi;
 
 import android.app.Activity;
+import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.ImageView;
+import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -19,16 +28,21 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.ArrayList;
+
 
 public class main extends Activity {
 
     String urlApi = "http://weather.livedoor.com/forecast/webservice/json/v1?city=";
     private RequestQueue mQueue;
-    ArrayAdapter<String> adapter;
+//    ArrayAdapter<String> adapter;
 
     private TextView titleText;
     private TextView dateText;
     private TextView telopText;
+    private TextView urlText;
+
+    private ListView listV;
 
     private static String tagD = "LogD";
 
@@ -40,21 +54,83 @@ public class main extends Activity {
         titleText = (TextView) findViewById(R.id.titleTextV);
         dateText = (TextView) findViewById(R.id.dateTextV);
         telopText = (TextView) findViewById(R.id.telopTextV);
+        urlText = (TextView) findViewById(R.id.urlTextV);
+        listV = (ListView) findViewById(R.id.listView);
+
 
         //アプリ起動時の表示
         titleText.setText("地域");
         dateText.setText("日付");
         telopText.setText("天気");
+        urlText.setText("URL");
+
+        // Option : 数日分をリストにして表示する
+//        String[] ListDate = {"Item1", "Item2"};
+        //adapterの作成
+/*
+        List<String> ListDate = new ArrayList<String>();
+        for (int t = 0; t < 7; t++) {
+            //    ListDate.add("" + t);
+        }
+
+        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, R.layout.list_item, ListDate);
+        //データがなかった場合
+        listV.setEmptyView(findViewById(R.id.empty));
+        listV.setAdapter(adapter);
+*/
+        ArrayList<User> users = new ArrayList<User>();
+//        List<Map<String, String >> ListDate = new ArrayList<Map<String, String>>();
+
+
+//        Map<String, String> m = new HashMap<String, String>();
+        int[] images = {R.drawable.ic_launcher, R.drawable.ic_launcher, R.drawable.ic_launcher};
+        String[] names = {"shohei", "soshi", "ryugo"};
+        String[] locations = {"meinohama", "hakata", "nisiku"};
+/*
+        for (int i = 0; i < names.length; i++) {
+            Map<String, String> m = new HashMap<String, String>();
+            m.put("name", names[i]);
+            m.put("location", locations[i]);
+            ListDate.add(m);
+        }
+*/
+        for (int i = 0; i < images.length; i++) {
+            User user = new User();
+            user.setImage(BitmapFactory.decodeResource(getResources(), images[i]));
+            user.setName(names[i]);
+            user.setlocation(locations[i]);
+            users.add(user);
+        }
+
+        //Adapterの準備
+//        String[] from = {"name", "location"};
+//        int[] to = {android.R.id.text1, android.R.id.text2};
+//        SimpleAdapter adapter = new SimpleAdapter(this, ListDate, android.R.layout.simple_list_item_2, from, to);
+
+        UserAdapter userAdapter = new UserAdapter(this, 0, users);
+
+        //ListViewにadapterを設置
+//        listV.setEmptyView(findViewById(R.id.empty));
+//        listV.setAdapter(adapter);
+        listV.setAdapter(userAdapter);
+
+        listV.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+//                TextView tv1 = (TextView) view.findViewById(android.R.id.text1);
+//                String s = tv1.getText().toString();
+//                Toast.makeText(main.this, s, Toast.LENGTH_SHORT).show();
+                TextView name = (TextView) view.findViewById(R.id.name);
+                String s = name.getText().toString();
+                Toast.makeText(main.this, s, Toast.LENGTH_SHORT).show();
+
+            }
+        });
+
     }
 
-/* Option : 数日分をリストにして表示する
-        ListView listForecast = (ListView) findViewById(R.id.listForecast);
-        adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1);
-        listForecast.setAdapter(adapter);
-*/
-
     //クリックしたらURLを変更する
-    public void setArea (View v) {
+    public void setArea(View v) {
         switch (v.getId()) {
             case R.id.button1:
                 urlApi = urlApi + "400010";
@@ -103,14 +179,11 @@ public class main extends Activity {
                             String title = response.getString("title");
                             titleText.setText(title);
 
-//                            String publicTime = response.getString("publicTime");
-//                            publicTimeText.setText(publicTime);
-//                            String forecastsJson = response.getString(response);
-
                             JSONArray forecastsJson = response.getJSONArray("forecasts");
-//                          Log.d(tagD, forecastsJson);
+//                          Log.d(tagD, forecastsJson.toString());
 
-                            for (int i = 0; i < 1; i++) { //forecastsJson.length(); i++) {
+                            for (int i = 0; i < forecastsJson.length(); i++) {
+//                                ListDate.add(i);
 
                                 JSONObject forecasts = forecastsJson.getJSONObject(i);
 
@@ -120,8 +193,10 @@ public class main extends Activity {
                                 String telopJ = forecasts.getString("telop");
                                 telopText.setText(telopJ);
 
+                                String imageJ = forecasts.getJSONObject("image").getString("url");
+                                urlText.setText(imageJ);
+
                             }
-//                            date = response.getJSONObject("forecasts").getString("date");
 
                         } catch (JSONException e) {
                             e.printStackTrace();
@@ -141,6 +216,96 @@ public class main extends Activity {
 //        queue.add(jsonRequest);
     }
 
+    //高速化の為
+    private static class ViewHolder {
+        ImageView image;
+        TextView name;
+        TextView location;
+
+        public ViewHolder(View view) {
+            this.image = (ImageView) view.findViewById(R.id.imageV);
+            this.name = (TextView) view.findViewById(R.id.name);
+            this.location = (TextView) view.findViewById(R.id.location);
+        }
+
+
+    }
+
+    public class UserAdapter extends ArrayAdapter<User> {
+        private LayoutInflater layoutInflater;
+
+        public UserAdapter(Context context, int viewResourceId, ArrayList<User> users) {
+            super(context, viewResourceId, users);
+            this.layoutInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        }
+
+        @Override
+        public View getView(int position, View convertView, ViewGroup parent) {
+            ViewHolder viewHolder;
+
+            //再利用できるViewがなかっらLayoutInflaterを使ってrow.xmlにViewする
+            if (convertView == null) {
+                convertView = layoutInflater.inflate(R.layout.list_row, null);
+                viewHolder = new ViewHolder(convertView);
+                convertView.setTag(viewHolder);
+            } else {
+                viewHolder = (ViewHolder) convertView.getTag();
+            }
+
+            //Viewにデータをセットする
+            User user = (User) getItem(position);
+
+            viewHolder.image.setImageBitmap(user.getImage());
+            viewHolder.name.setText(user.getName());
+            viewHolder.location.setText(user.getlocation());
+/*
+            ImageView userImage = (ImageView) convertView.findViewById(R.id.imageV);
+            userImage.setImageBitmap(user.getImage());
+
+            TextView userName = (TextView) convertView.findViewById(R.id.name);
+            userName.setText(user.getName());
+
+            TextView userLocation = (TextView) convertView.findViewById(R.id.location);
+            userLocation.setText(user.getlocation());
+*/
+            //Viewを返す
+            return convertView;
+        }
+    }
+
+    private class User {
+        private Bitmap image;
+        private String name;
+        private String location;
+
+        public Bitmap getImage() {
+            return this.image;
+        }
+
+        public void setImage(Bitmap image) {
+            this.image = image;
+        }
+
+        public String getName() {
+            return this.name;
+        }
+
+        public void setName(String name) {
+            this.name = name;
+        }
+
+        public String getlocation() {
+            return this.location;
+        }
+
+        public void setlocation(String location) {
+            this.location = location;
+        }
+    }
+/* Image
+--------------------*/
+/* NewworkImageView*/
+//    String url = "url"; //とりあえず
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
