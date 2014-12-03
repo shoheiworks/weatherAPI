@@ -28,10 +28,11 @@ urlから取得したJSONデータを
 4. try catch で表示する
 5. URLを選択できるようにする : btn or list or spinner(option)
     県の btn or List をクリックしたら、IDをセットして、表示する
-
-
-
-複数の画像を表示する　ImageLoader　を使ってみる？
+6. listViewを使う
+    1. データを準備
+    2. adaptarを準備
+    3. adapterを設置
+7. ImageLoaderを使う
 
 
 -- 今回表示する内容
@@ -39,7 +40,6 @@ urlから取得したJSONデータを
     地域
     日付
     天気
-    明日の天気
 
 -- id
 ------------------------------------------------------------
