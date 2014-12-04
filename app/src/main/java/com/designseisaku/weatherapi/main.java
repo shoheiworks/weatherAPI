@@ -36,9 +36,6 @@ public class main extends Activity {
 
     private RequestQueue mQueue;
     private TextView titleText;
-    private TextView dateText;
-    private TextView telopText;
-    private TextView imgUrlJ;
     private ImageView imgView;
 
     String urlApi = "http://weather.livedoor.com/forecast/webservice/json/v1?city=";
@@ -50,16 +47,10 @@ public class main extends Activity {
         setContentView(R.layout.activity_main);
 
         titleText = (TextView) findViewById(R.id.titleTextV);
-        dateText = (TextView) findViewById(R.id.dateTextV);
-        telopText = (TextView) findViewById(R.id.telopTextV);
-        imgUrlJ = (TextView) findViewById(R.id.urlTextV);
         imgView = (ImageView) findViewById(R.id.imageV);
 
-        //アプリ起動時の表示f
+        //アプリ起動時の表示
         titleText.setText("地域");
-        dateText.setText("日付");
-        telopText.setText("天気");
-        imgUrlJ.setText(null);
 
     }
 
@@ -117,7 +108,6 @@ public class main extends Activity {
                             JSONArray forecastsJson = response.getJSONArray("forecasts");
                             Log.d(tagD, forecastsJson.toString());
 
-//                            ArrayList<String> weather = new ArrayList<String>();
                             ArrayList<Weather> weatherList = new ArrayList<Weather>();
 
                             for (int i = 0; i < forecastsJson.length(); i++) {
@@ -126,14 +116,10 @@ public class main extends Activity {
                                 Weather weather = new Weather();
 
                                 String dateJ = forecasts.getString("date");
-                                dateText.setText(dateJ);
 
                                 String telopJ = forecasts.getString("telop");
-                                telopText.setText(telopJ);
 
                                 String imgUrlJ = forecasts.getJSONObject("image").getString("url");
-//                                urlText = imageJ.toString();
-                                //urlText.setText(imageJ);
 
                                 weather.setImage(BitmapFactory.decodeResource(getResources(), R.drawable.ic_launcher));
                                 weather.setDate(dateJ);
@@ -141,9 +127,8 @@ public class main extends Activity {
                                 weather.setUrl(imgUrlJ);
 
                                 weatherList.add(weather);
-                                //weathers.add(dateJ + telopJ + imageJ);
                             }
-//                                ArrayAdapter<String> adapter = new ArrayAdapter<String>(main.this, android.R.layout.simple_list_item_1, weather);
+
                             WeatherAdapter weatherAdapter = new WeatherAdapter(main.this, 0, weatherList);
                             final ListView listV = (ListView) findViewById(R.id.listView);
                             listV.setEmptyView(findViewById(R.id.empty));
@@ -217,18 +202,12 @@ public class main extends Activity {
             ImageLoader.ImageListener listener = ImageLoader.getImageListener(viewHolder.weatherImage, R.drawable.ic_launcher, R.drawable.ic_launcher);
             imageLoader.get(imgUrl, listener);
 
-//            ImageView wetherImage = (ImageView) convertView.findViewById(R.id.imageV);
-            //           wetherImage.setText(weather.getUrl());
-
             TextView wetherDate = (TextView) convertView.findViewById(R.id.dateTextV);
             wetherDate.setText(weather.getDate());
 
             TextView wetherTelop = (TextView) convertView.findViewById(R.id.telopTextV);
             wetherTelop.setText(weather.getTelop());
-/*
-//            TextView wetherImgUrl = (TextView) convertView.findViewById(R.id.urlTextV);
-//            wetherImgUrl.setText(weather.getUrl());
-*/
+
 //            viewHolder.image.setImageBitmap(user.getImage());
 //            viewHolder.date.setText(weather.getDate());
 //            viewHolder.location.setText(user.getlocation());
