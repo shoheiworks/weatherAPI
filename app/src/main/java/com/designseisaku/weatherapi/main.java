@@ -2,14 +2,18 @@ package com.designseisaku.weatherapi;
 
 import android.app.Activity;
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.util.Log;
+import android.util.LruCache;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -30,17 +34,14 @@ import java.util.ArrayList;
 
 public class main extends Activity {
 
-    String urlApi = "http://weather.livedoor.com/forecast/webservice/json/v1?city=";
     private RequestQueue mQueue;
-//    ArrayAdapter<String> adapter;
-
     private TextView titleText;
     private TextView dateText;
     private TextView telopText;
-    private TextView urlText;
+    private TextView imgUrlJ;
+    private ImageView imgView;
 
-    private ImageLoader mImageLoader;
-
+    String urlApi = "http://weather.livedoor.com/forecast/webservice/json/v1?city=";
     private static String tagD = "LogD";
 
     @Override
@@ -51,13 +52,14 @@ public class main extends Activity {
         titleText = (TextView) findViewById(R.id.titleTextV);
         dateText = (TextView) findViewById(R.id.dateTextV);
         telopText = (TextView) findViewById(R.id.telopTextV);
-        urlText = (TextView) findViewById(R.id.urlTextV);
+        imgUrlJ = (TextView) findViewById(R.id.urlTextV);
+        imgView = (ImageView) findViewById(R.id.imageV);
 
         //アプリ起動時の表示f
         titleText.setText("地域");
         dateText.setText("日付");
         telopText.setText("天気");
-        urlText.setText(null);
+        imgUrlJ.setText(null);
 
     }
 
@@ -123,28 +125,29 @@ public class main extends Activity {
 
                                 Weather weather = new Weather();
 
-
                                 String dateJ = forecasts.getString("date");
                                 dateText.setText(dateJ);
 
                                 String telopJ = forecasts.getString("telop");
                                 telopText.setText(telopJ);
 
-                                String imageJ = forecasts.getJSONObject("image").getString("url");
-                                urlText.setText(imageJ);
+                                String imgUrlJ = forecasts.getJSONObject("image").getString("url");
+//                                urlText = imageJ.toString();
+                                //urlText.setText(imageJ);
 
+                                weather.setImage(BitmapFactory.decodeResource(getResources(), R.drawable.ic_launcher));
                                 weather.setDate(dateJ);
                                 weather.setTelop(telopJ);
+                                weather.setUrl(imgUrlJ);
+
                                 weatherList.add(weather);
                                 //weathers.add(dateJ + telopJ + imageJ);
                             }
 //                                ArrayAdapter<String> adapter = new ArrayAdapter<String>(main.this, android.R.layout.simple_list_item_1, weather);
-                                WeatherAdapter weatherAdapter = new WeatherAdapter(main.this, 0, weatherList);
-                                final ListView listV = (ListView) findViewById(R.id.listView);
-                                listV.setEmptyView(findViewById(R.id.empty));
-
-//                                listV.setAdapter(adapter);
-                                listV.setAdapter(weatherAdapter);
+                            WeatherAdapter weatherAdapter = new WeatherAdapter(main.this, 0, weatherList);
+                            final ListView listV = (ListView) findViewById(R.id.listView);
+                            listV.setEmptyView(findViewById(R.id.empty));
+                            listV.setAdapter(weatherAdapter);
 
 
                         } catch (JSONException e) {
@@ -166,51 +169,66 @@ public class main extends Activity {
     }
 
 
-/*
+
     //高速化の為
     private static class ViewHolder {
-        ImageView image;
-        TextView date;
-        TextView location;
+        ImageView weatherImage;
+//        TextView date;
+//        TextView location;
 
         public ViewHolder(View view) {
-            this.image = (ImageView) view.findViewById(R.id.imageV);
-            this.date = (TextView) view.findViewById(R.id.dateTextV);
-            this.location = (TextView) view.findViewById(R.id.location);
+            this.weatherImage = (ImageView) view.findViewById(R.id.imageV);
+//            this.date = (TextView) view.findViewById(R.id.dateTextV);
+//            this.location = (TextView) view.findViewById(R.id.location);
         }
     }
-*/
 
+
+    /* WeatherAdapter */
     public class WeatherAdapter extends ArrayAdapter<Weather> {
         private LayoutInflater layoutInflater;
-//
+        private ImageLoader imageLoader;
+
         public WeatherAdapter(Context context, int viewResourceId, ArrayList<Weather> weatherList) {
             super(context, viewResourceId, weatherList);
+            imageLoader = new ImageLoader(mQueue, new SetImages());
             this.layoutInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         }
 
         @Override
         public View getView(int position, View convertView, ViewGroup parent) {
-//            ViewHolder viewHolder;
+            ViewHolder viewHolder;
 
             //再利用できるViewがなかったらLayoutInflaterを使ってlist_row.xmlにViewする
             if (convertView == null) {
                 convertView = layoutInflater.inflate(R.layout.list_row, null);
-//                viewHolder = new ViewHolder(convertView);
-//                convertView.setTag(viewHolder);
+                viewHolder = new ViewHolder(convertView);
+                convertView.setTag(viewHolder);
             } else {
-//                viewHolder = (ViewHolder) convertView.getTag();
+                viewHolder = (ViewHolder) convertView.getTag();
             }
 
             //Viewにデータをセットする
             Weather weather = (Weather) getItem(position);
+
+            String imgUrl = weather.getUrl();
+
+            /* ImageLoader */
+            ImageLoader.ImageListener listener = ImageLoader.getImageListener(viewHolder.weatherImage, R.drawable.ic_launcher, R.drawable.ic_launcher);
+            imageLoader.get(imgUrl, listener);
+
+//            ImageView wetherImage = (ImageView) convertView.findViewById(R.id.imageV);
+            //           wetherImage.setText(weather.getUrl());
 
             TextView wetherDate = (TextView) convertView.findViewById(R.id.dateTextV);
             wetherDate.setText(weather.getDate());
 
             TextView wetherTelop = (TextView) convertView.findViewById(R.id.telopTextV);
             wetherTelop.setText(weather.getTelop());
-
+/*
+//            TextView wetherImgUrl = (TextView) convertView.findViewById(R.id.urlTextV);
+//            wetherImgUrl.setText(weather.getUrl());
+*/
 //            viewHolder.image.setImageBitmap(user.getImage());
 //            viewHolder.date.setText(weather.getDate());
 //            viewHolder.location.setText(user.getlocation());
@@ -221,19 +239,19 @@ public class main extends Activity {
     }
 
     private class Weather {
-//        private Bitmap url; //image
+        private Bitmap image;
         private String date;
         private String telop;
+        private String imgUrl;
 
-/*
-                public Bitmap getImage() {
-                    return this.urlJ;
-                }
 
-                public void setImage(Bitmap image) {
-                    this.urlJ = image;
-                }
-*/
+        public Bitmap getImage() {
+            return this.image;
+        }
+
+        public void setImage(Bitmap image) {
+            this.image = image;
+        }
 
         public String getDate() {
             return this.date;
@@ -250,12 +268,43 @@ public class main extends Activity {
         public void setTelop(String telop) {
             this.telop = telop;
         }
+
+        public String getUrl() {
+            return this.imgUrl;
+        }
+
+        public void setUrl(String imgUrlJ) {
+            this.imgUrl = imgUrlJ;
+        }
     }
 
-/* Image
---------------------*/
-/* NewworkImageView*/
-//    String url = "url"; //とりあえず
+    public class SetImages implements ImageLoader.ImageCache {
+
+        private LruCache<String, Bitmap> mMemoryCache;
+
+        public SetImages() {
+            int maxSize = 10 * 1024 * 1024;
+            mMemoryCache = new LruCache<String, Bitmap>(maxSize) {
+                @Override
+                protected int sizeOf(String key, Bitmap value) {
+                    return value.getRowBytes() * value.getHeight();
+                }
+            };
+        }
+
+        @Override
+        public Bitmap getBitmap(String url) {
+            return mMemoryCache.get(url);
+        }
+
+        @Override
+        public void putBitmap(String url, Bitmap bitmap) {
+            mMemoryCache.put(url, bitmap);
+        }
+
+
+    }
+
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
